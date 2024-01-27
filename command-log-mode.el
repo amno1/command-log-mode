@@ -46,7 +46,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+;; (eval-when-compile (require 'cl-lib))
 
 (defvar clm/log-text t
   "A non-nil setting means text will be saved to the command log.")
@@ -98,7 +98,6 @@ Frequently used non-interesting commands (like cursor movements) should be put h
 (defvar clm/last-keyboard-command nil
   "Last logged keyboard command.")
 
-
 (defvar clm/log-command-indentation 11
   "*Indentation of commands in command log buffer.")
 
@@ -148,8 +147,8 @@ Frequently used non-interesting commands (like cursor movements) should be put h
              command-log-mode-auto-show
              (not (get-buffer-window clm/command-log-buffer)))
         (clm/open-command-log-buffer))
-      ;; We can close the window though
-      (clm/close-command-log-buffer)))
+    ;; We can close the window though
+    (clm/close-command-log-buffer)))
 
 (define-global-minor-mode global-command-log-mode command-log-mode
   command-log-mode)
@@ -208,15 +207,15 @@ If ARG is Non-nil, the existing command log buffer is cleared."
              (not command-log-mode))
     (if command-log-mode-is-global
         (global-command-log-mode)
-        (command-log-mode)))
+      (command-log-mode)))
   (with-current-buffer
       (setq clm/command-log-buffer
             (get-buffer-create " *command-log*"))
     (let ((win (get-buffer-window (current-buffer))))
       (if (windowp win)
           (clm/close-command-log-buffer)
-          ;; Else open the window
-          (clm/open-command-log-buffer arg)))))
+        ;; Else open the window
+        (clm/open-command-log-buffer arg)))))
 
 (defun clm/scroll-buffer-window (buffer &optional move-fn)
   "Updates `point' of windows containing BUFFER according to MOVE-FN.
@@ -313,9 +312,9 @@ Clears the command log buffer after saving."
 
 (eval-after-load 'command-log-mode
   '(when command-log-mode-key-binding-open-log
-    (global-set-key
-     (kbd command-log-mode-key-binding-open-log)
-     'clm/toggle-command-log-buffer)))
+     (global-set-key
+      (kbd command-log-mode-key-binding-open-log)
+      'clm/toggle-command-log-buffer)))
 
 (provide 'command-log-mode)
 
